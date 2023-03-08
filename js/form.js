@@ -2,11 +2,59 @@ let botaoAdicionar = document.querySelector('#adicionar-paciente')
 botaoAdicionar.addEventListener('click', function (evento) {
 
     evento.preventDefault()
-    let form = document.querySelector('#form-adiciona')
+
+    let form = document.querySelector('#form-adiciona') 
+
     let paciente = obterValoresDoForm(form)
+
+    let erros = validaPaciente(paciente)  
+
+    
+    if(erros.length > 0){
+        exibeMensagemDeErro(erros)
+
+        return
+    }
     adicionaPacienteNaTabela(paciente)
+
+    let MensagemDeErro = document.querySelector("#mensagens-erro")
+    MensagemDeErro.innerHTML = ''
 })
 
+function validaPaciente(paciente){
+    let erros = []
+    if(paciente.nome.length == 0){
+        erros.push('O nome não pode estar em branco')
+    }
+    if(paciente.gordura.length == 0){
+        erros.push('A gordura não pode estar em branco')
+    }
+    if(paciente.peso.length == 0){
+        erros.push('O peso não pode estar em branco')
+    }
+    if(paciente.altura.length == 0){
+        erros.push('A altura não pode estar em branco')
+    }
+    if (!validaPeso(paciente.peso)){
+        erros.push('Peso invalido')
+    }
+    if (!validaAltura(paciente.altura)){
+        erros.push('Altura invalida')
+    }
+
+        return erros
+}
+
+function exibeMensagemDeErro(erros){
+    let ul = document.querySelector('#mensagens-erro')
+    ul.innerHTML = ''
+
+    erros.forEach(function(erro){
+        let li = document.createElement('li')
+        li.textContent = erro
+        ul.appendChild(li)
+    })
+}
 
 function adicionaPacienteNaTabela(paciente){
     let pacienteTr = montarTr(paciente)
